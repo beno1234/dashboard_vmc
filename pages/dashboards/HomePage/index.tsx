@@ -17,6 +17,7 @@ import {
   Select,
   MenuItem
 } from '@mui/material';
+import { useTheme, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/system';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
@@ -58,7 +59,7 @@ const SAMPLES: Sample[] = [
   },
   {
     id: '4',
-    name: 'Amostra 3',
+    name: 'Amostra 4',
     createdAt: '9 de Outubro de 2022',
     status: 'Processando',
     downloadUrl: 'https://example.com/sample3.zip'
@@ -81,6 +82,10 @@ const StatusIconWrapper = styled(Box)(
 );
 
 function DashboardCrypto() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleDownloadClick = (downloadUrl: string) => {
@@ -90,6 +95,12 @@ function DashboardCrypto() {
   const handleRequestMoreSamples = () => {
     setOpenDialog(true);
   };
+
+  const cardBasis = isMobile
+    ? '100%'
+    : isTablet
+    ? 'calc(50% - 8px)'
+    : 'calc(33.33% - 8px)';
 
   return (
     <>
@@ -111,10 +122,7 @@ function DashboardCrypto() {
           }}
         >
           {SAMPLES.map((sample) => (
-            <CardWrapper
-              key={sample.id}
-              sx={{ flexBasis: 'calc(33.33% - 8px)' }}
-            >
+            <CardWrapper key={sample.id} sx={{ flexBasis: cardBasis }}>
               <CardContent>
                 <Box
                   sx={{
