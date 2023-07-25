@@ -8,6 +8,8 @@ import LoginForm from 'src/components/auth/LoginForm';
 import RegisterForm from 'src/components/auth/RegisterForm';
 import ForgotPasswordForm from 'src/components/auth/ForgotPasswordForm';
 
+import { createSession } from '../../../api/api'; // Importe a função createSession da sua API
+
 const FormContainer = styled(Box)(
   () => `
     width: 100%;
@@ -23,11 +25,24 @@ export default function Hero() {
   );
   const router = useRouter();
 
-  const handleLogin = async () => {
+  const handleLogin = async (username, password) => {
     setLoading(true);
-    // Fazer chamada para autenticação com o servidor
-    setLoading(false);
-    router.push('/dashboards/HomePage');
+    try {
+      const response = await createSession({ username, password });
+
+      if (response.status === 200) {
+        const { userId } = response.data; // Acessa o ID do usuário retornado pela API
+        setLoading(false);
+        router.push(`/dashboards/HomePage/${userId}`);
+      } else {
+        setLoading(false);
+        // Exiba uma mensagem de erro ou tome outras ações adequadas
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      // Exiba uma mensagem de erro ou tome outras ações adequadas
+    }
   };
 
   const handleRegister = async () => {

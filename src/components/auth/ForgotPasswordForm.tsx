@@ -7,6 +7,7 @@ import {
   Typography
 } from '@mui/material';
 import { styled } from '@mui/system';
+import { ForgotPassword } from '@/api/api';
 import LoginForm from './LoginForm';
 
 interface ForgotPasswordFormProps {
@@ -29,10 +30,12 @@ const FormWrapper = styled(Box)(
 );
 
 const ButtonWrapper = styled(Box)(
-  ({ theme }) =>
-    `margin-top: ${theme.spacing(
-      2
-    )}; width: 100%; display: flex; justify-content: space-between;`
+  ({ theme }) => `
+    margin-top: ${theme.spacing(2)};
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+`
 );
 
 export default function ForgotPasswordForm({
@@ -43,26 +46,33 @@ export default function ForgotPasswordForm({
   const [action, setAction] = useState<'login' | 'register' | 'forgotPassword'>(
     'forgotPassword'
   );
+  const [error, setError] = useState('');
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onResetPassword(email);
+    try {
+      await ForgotPassword({ email });
+      setError('');
+      onResetPassword(email);
+    } catch (error) {
+      setError('Erro ao enviar o e-mail de redefinição de senha');
+    }
   };
 
   return (
     <>
-      {action == 'forgotPassword' && (
+      {action === 'forgotPassword' && (
         <form onSubmit={handleSubmit}>
           <FormWrapper>
             <Typography variant="h5" gutterBottom>
-              Esqueceu senha
+              Esqueceu sua senha
             </Typography>
             <Typography variant="body1" gutterBottom>
               Digite o endereço de e-mail associado à sua conta e enviaremos
               instruções para redefinir sua senha.
             </Typography>
             <TextField
-              label="Email"
+              label="E-mail"
               variant="outlined"
               type="email"
               value={email}
@@ -71,6 +81,11 @@ export default function ForgotPasswordForm({
               margin="normal"
               required
             />
+            {error && (
+              <Box my={2}>
+                <Typography color="error">{error}</Typography>
+              </Box>
+            )}
             <ButtonWrapper>
               <Button
                 variant="contained"

@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 
 import EditProfileTab from '@/content/Management/Users/settings/EditProfileTab';
 import SecurityTab from '@/content/Management/Users/settings/SecurityTab';
+import ProtectedRoute from '@/components/ProtectedRoute/ProtectedRoute';
 
 const TabsWrapper = styled(Tabs)(
   () => `
@@ -31,7 +32,7 @@ function ManagementUserSettings() {
   };
 
   return (
-    <>
+    <ProtectedRoute>
       <Head>
         <title>User Settings - Applications</title>
       </Head>
@@ -67,7 +68,7 @@ function ManagementUserSettings() {
         </Grid>
       </Container>
       <Footer />
-    </>
+    </ProtectedRoute>
   );
 }
 

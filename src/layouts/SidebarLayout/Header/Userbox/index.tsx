@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
-
 import NextLink from 'next/link';
-
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -14,7 +13,6 @@ import {
   Popover,
   Typography
 } from '@mui/material';
-
 import { styled } from '@mui/material/styles';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
@@ -63,6 +61,7 @@ function HeaderUserbox() {
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -72,15 +71,20 @@ function HeaderUserbox() {
     setOpen(false);
   };
 
+  const handleSignOut = (): void => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role'); // Limpa o token do armazenamento local
+    // Limpa o token do armazenamento local
+    router.push('/'); // Redireciona para a página "/"
+  };
+
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
         <Hidden mdDown>
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.jobtitle}
-            </UserBoxDescription>
+            <UserBoxLabel variant="body1"></UserBoxLabel>
+            <UserBoxDescription variant="body2"></UserBoxDescription>
           </UserBoxText>
         </Hidden>
         <Hidden smDown>
@@ -102,10 +106,8 @@ function HeaderUserbox() {
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.jobtitle}
-            </UserBoxDescription>
+            <UserBoxLabel variant="body1"></UserBoxLabel>
+            <UserBoxDescription variant="body2"></UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
@@ -119,9 +121,9 @@ function HeaderUserbox() {
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
+          <Button color="primary" fullWidth onClick={handleSignOut}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Sign out
+            Logout
           </Button>
         </Box>
       </Popover>

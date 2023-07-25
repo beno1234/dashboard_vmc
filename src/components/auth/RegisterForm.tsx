@@ -7,6 +7,8 @@ import {
   Typography
 } from '@mui/material';
 import { styled } from '@mui/system';
+import { createUser } from '@/api/api';
+import { useRouter } from 'next/router';
 
 const FormWrapper = styled(Box)(
   ({ theme }) => `
@@ -32,7 +34,7 @@ const ButtonWrapper = styled(Box)(
 );
 
 interface RegisterFormProps {
-  onRegister: (email: string, password: string) => void;
+  onRegister: (username: string, password: string) => void;
   loading: boolean;
 }
 
@@ -42,10 +44,17 @@ export default function RegisterForm({
 }: RegisterFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onRegister(email, password);
+    try {
+      const response = await createUser({ email, password });
+      router.push('/');
+    } catch (error) {
+      setError('Algo deu errado');
+    }
   };
 
   return (
@@ -57,7 +66,7 @@ export default function RegisterForm({
         <TextField
           label="Email"
           variant="outlined"
-          type="email"
+          type="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           fullWidth

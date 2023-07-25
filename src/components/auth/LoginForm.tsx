@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import {
   Alert,
   Box,
@@ -9,8 +8,9 @@ import {
   Typography
 } from '@mui/material';
 import { styled } from '@mui/system';
-import users from '../../../mock/user';
 import ForgotPasswordForm from './ForgotPasswordForm';
+import { useRouter } from 'next/router';
+import { createSession } from '@/api/api';
 
 const FormWrapper = styled(Box)(
   ({ theme }) => `
@@ -43,22 +43,21 @@ interface LoginFormProps {
 export default function LoginForm({ onLogin, loading }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [action, setAction] = useState<'login' | 'register' | 'forgotPassword'>(
-    'login'
-  );
-  const router = useRouter();
+  const [action, setAction] = useState<'login' | 'forgotPassword'>('login');
   const [error, setError] = useState('');
+  const router = useRouter();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const validUser = users.find(
-      (user) => user.email === email && user.password === password
-    );
-    if (validUser) {
-      onLogin(email, password);
-      router.push('/dashboards/HomePage');
-    } else {
-      setError('Email ou Senha está incorreta');
+    try {
+      const response = await createSession({ email, password });
+      const { token, userId, role } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+
+      router.push(`/dashboards/HomePage/${userId}`);
+    } catch (error) {
+      setError('Usuário ou senha incorretos');
     }
   };
 
@@ -71,9 +70,9 @@ export default function LoginForm({ onLogin, loading }: LoginFormProps) {
               Login
             </Typography>
             <TextField
-              label="Email"
+              label="Usuário"
               variant="outlined"
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               fullWidth
