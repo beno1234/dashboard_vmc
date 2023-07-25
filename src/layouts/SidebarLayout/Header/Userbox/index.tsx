@@ -54,10 +54,10 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
-  const user = {
+  /*   const user = {
     name: 'Beno Lopes Dias',
     jobtitle: 'Programador'
-  };
+  }; */
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
