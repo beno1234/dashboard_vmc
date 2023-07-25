@@ -13,7 +13,7 @@ import { styled } from '@mui/system';
 import { ResetPassword } from '@/api/api';
 import { useRouter } from 'next/router';
 
-const FormContainer = styled(Container)(({ theme }) => ({
+const FormContainer = styled(Container)(() => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Alert,
   Box,
@@ -40,7 +40,7 @@ interface LoginFormProps {
   loading: boolean;
 }
 
-export default function LoginForm({ onLogin, loading }: LoginFormProps) {
+export default function LoginForm({ loading }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [action, setAction] = useState<'login' | 'forgotPassword'>('login');

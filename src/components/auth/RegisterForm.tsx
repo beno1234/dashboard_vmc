@@ -38,19 +38,16 @@ interface RegisterFormProps {
   loading: boolean;
 }
 
-export default function RegisterForm({
-  onRegister,
-  loading
-}: RegisterFormProps) {
+export default function RegisterForm({ loading }: RegisterFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [, setError] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await createUser({ email, password });
+      await createUser({ email, password });
       router.push('/');
     } catch (error) {
       setError('Algo deu errado');
