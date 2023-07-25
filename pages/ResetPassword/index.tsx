@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import ResetPasswordForm from '@/components/auth/ResetPasswordForm';
-import { ResetPassword } from '@/api/api';
 import jwt from 'jsonwebtoken';
 
 const PageWrapper = styled(Box)(
@@ -16,8 +15,8 @@ const PageWrapper = styled(Box)(
 );
 
 export default function ResetPasswordPage() {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [loading] = useState(false);
+  const [success] = useState(false);
   const router = useRouter();
   const { token } = router.query;
 
@@ -37,7 +36,7 @@ export default function ResetPasswordPage() {
     }
   }, [token]);
 
-  const handleResetPassword = async (password: string) => {
+  const handleResetPassword = async () => {
     if (!email) {
       console.error('E-mail não encontrado');
       return;
